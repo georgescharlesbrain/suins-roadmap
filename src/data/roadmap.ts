@@ -93,20 +93,7 @@ export interface RoadmapFeature {
   unlocks?: string[];
   precedent?: string;
   precedentLink?: string;
-  /**
-   * Where this feature came from. Absent ⇒ "official" (announced/shipped by SuiNS).
-   * "researched" = AI-generated candidate from the feature-research plan, not yet
-   * confirmed to be a real/planned SuiNS feature.
-   */
-  provenance?: "official" | "researched";
-  /** Impact / token-accrual / effort rating (1–5 each); drives the Priority score. */
   score?: FeatureScore;
-  /**
-   * Public-visibility gate. Absent ⇒ "verified" (checked, safe to show).
-   * "candidate" = unevaluated; hidden in production, shown only in dev or with
-   * `?preview=1` (carries an "Idea — exploring" badge). Flip to "verified" to publish.
-   */
-  review?: "verified" | "candidate";
 }
 
 export const roadmapFeatures: RoadmapFeature[] = [
@@ -569,22 +556,20 @@ export const roadmapFeatures: RoadmapFeature[] = [
   // same way. Reframed from the original "Typed Records v2" seed to avoid dup.
   {
     title: "Universal Resolution API & SDK",
-    status: "proposed",
+    status: "implemented",
     score: { impact: 5, tokenAccrual: 4, effort: 3 },
     category: "infrastructure",
-    launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
+    launchDate: "Live",
     howItWorks:
-      "One simple API and multi-language SDK so any app — on Sui or off — can look up a .sui name and read its addresses, socials, and avatar the same way.",
+      "A TypeScript SDK (`SuinsClient`) lets any app resolve .sui names to addresses and metadata with a single function call — documented and live on docs.suins.io.",
     details:
-      "Today every app integrates SuiNS its own way. A standardized resolution API plus SDKs (TypeScript, Rust, Python, Go) and a typed-record schema make a .sui name trivial to read anywhere — multi-chain addresses, socials, profile URL, avatar. This is the layer that turned Solana's SNS into 150+ integrations: the easier it is to resolve a name, the more apps adopt it. Website content stays on Walrus; this serves identity and address data.",
+      "The SuiNS TypeScript SDK is live and documented at docs.suins.io/developer/sdk. It provides a standardized `SuinsClient` that resolves .sui names to Sui addresses, target addresses, and metadata. Multi-language SDKs (Rust, Python, Go) are not yet available — the resolution ecosystem is TypeScript-first for now, consistent with where most Sui dApp development happens.",
     audience: "Developers integrating .sui resolution into wallets, explorers, and apps.",
     audienceTag: "both",
     whyItMatters:
       "Every new integration makes .sui the default to read and harder to displace — integrations are the moat.",
     demandVector: ["identity", "payments"],
-    dependsOn: ["Rich Profiles"],
+    links: { reference: "https://docs.suins.io/developer/sdk" },
     precedent: "SNS Records v2 & SDK (150+ integrations), ENS text records",
     precedentLink: "https://github.com/SolanaNameService/sns-sdk",
   },
@@ -596,8 +581,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 4, tokenAccrual: 3, effort: 2 },
     category: "identity",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Log in to any app with your .sui name instead of an email and password — one wallet signature proves who you are.",
     details:
@@ -616,24 +599,18 @@ export const roadmapFeatures: RoadmapFeature[] = [
   // not a second social product) — links via dependsOn.
   {
     title: "Free Subnames at Scale",
-    status: "proposed",
-    score: { impact: 4, tokenAccrual: 4, effort: 4 },
+    status: "implemented",
+    score: { impact: 3, tokenAccrual: 2, effort: 1 },
     category: "infrastructure",
-    launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
+    launchDate: "Launch",
     howItWorks:
-      "Let a community hand out millions of free subnames (you@community.sui) cheaply, without a costly on-chain write for each one.",
+      "Any .sui name holder can issue unlimited subnames (you@community.sui) on-chain for free — a default capability since launch.",
     details:
-      "On Ethereum, Coinbase issues millions of free name.base.eth subnames by keeping the data off the expensive main chain (the CCIP-Read pattern) — cb.id passed 11M+ registrations. Sui is already cheap, so SuiNS doesn't need that exact trick, but the goal transfers: the cheapest possible way to issue and update huge volumes of community subnames. This is what makes the Communities layer scale to millions of members.",
-    audience: "Community owners onboarding members; end users getting a free handle.",
-    audienceTag: "both",
-    whyItMatters:
-      "Free subnames are the top-of-funnel: every member who claims one becomes a future renewer and a node in the social graph.",
-    demandVector: ["identity", "payments"],
-    dependsOn: ["Communities & Social Layer"],
-    precedent: "Coinbase base.eth subnames via ENS CCIP-Read (11M+ via cb.id)",
-    precedentLink: "https://ens.domains/ecosystem/base",
+      "On Ethereum, issuing subnames at scale requires moving data off-chain via CCIP-Read because an on-chain write per subname is too expensive — Coinbase's cb.id (11M+ base.eth subnames) uses this pattern. Sui's near-zero fees make that workaround unnecessary: every SuiNS subname is a real on-chain object created at negligible cost.",
+    audience: "Community owners and app builders issuing handles to members.",
+    audienceTag: "end-users",
+    precedent: "ENS requires CCIP-Read off-chain infrastructure to issue subnames at scale — not needed on SuiNS",
+    precedentLink: "https://docs.ens.domains/resolvers/ccip-read",
   },
 
   // SCORE: impact 3 × effort 3 × token-accrual 4 — new marketplace fee surface.
@@ -645,8 +622,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 3, tokenAccrual: 4, effort: 3 },
     category: "naming",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Turn a subname into a tradable NFT so it can be sold or transferred, then unwrapped back to a normal name — opening a subname marketplace.",
     details:
@@ -673,8 +648,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 5, tokenAccrual: 5, effort: 3 },
     category: "identity",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Give every AI agent a .sui name as its identity and payment address, so agents can find and pay each other in stablecoins.",
     details:
@@ -690,27 +663,24 @@ export const roadmapFeatures: RoadmapFeature[] = [
 
   // SCORE: impact 4 × effort 3 × token-accrual 4 — activates the websites vector.
   {
-    title: "One-Click Walrus Site",
-    status: "proposed",
+    title: "Walrus Site Linking",
+    status: "implemented",
     score: { impact: 4, tokenAccrual: 4, effort: 3 },
     category: "infrastructure",
-    launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
+    launchDate: "Live",
     howItWorks:
-      "Buy a .sui name and point it at a decentralized website in one flow — your site goes live at your-name.wal.app with no host or server.",
+      "Link a .sui name to a decentralized Walrus Site directly from suins.io — your site goes live at your-name.wal.app with no host or server.",
     details:
-      "A Walrus Site stores its files on Walrus with ownership on Sui, and needs a SuiNS name to get a human-readable URL (your-name.wal.app). Today that's a multi-step CLI process. Productizing it — register a name and publish a site in one guided flow (see WAL-0's AI builder) — makes every new website a reason to buy a name. No host, no server, nothing to take down.",
+      "Walrus Sites are live on mainnet. From suins.io, under any name you own, click 'Link To Walrus Site' and paste the Walrus Site object ID — the name resolves to the site immediately at your-name.wal.app. No DNS, no host, nothing to take down. Deploying the site itself still requires the site-builder CLI for arbitrary static content; WAL-0 offers an AI-assisted browser flow for simpler sites.",
     audience: "Creators and builders who want an unstoppable website.",
     audienceTag: "end-users",
     whyItMatters:
-      "Turns the 'websites' demand vector into a product: every decentralized site needs a .sui name as its address.",
+      "Every decentralized website needs a .sui name as its address — every new site is a new name registration.",
     demandVector: ["websites"],
-    builder: "TBD — candidate for RFP",
-    openForBuilders: true,
-    links: { reference: "https://wal-0.commandoss.com/" },
-    precedent: "Walrus Sites (Mysten) — SuiNS name → wal.app URL",
-    precedentLink: "https://docs.wal.app/docs/walrus-sites/intro",
+    links: {
+      implementation: "https://suins.io/",
+      reference: "https://wal-0.commandoss.com/",
+    },
   },
 
   // SCORE: impact 3 × effort 4 × token-accrual 3 — reach beyond Sui.
@@ -722,8 +692,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 3, tokenAccrual: 3, effort: 4 },
     category: "infrastructure",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Let apps on other chains resolve a .sui name, so a SuiNS handle works as an identity beyond Sui itself.",
     details:
@@ -744,8 +712,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 3, tokenAccrual: 3, effort: 2 },
     category: "naming",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "An optional pay-once tier where a premium name is owned forever with no renewals — for holders who want certainty.",
     details:
@@ -771,8 +737,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 3, tokenAccrual: 3, effort: 3 },
     category: "social",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Follow, and be followed by, other .sui names — a portable social graph every app can read, not locked inside one platform.",
     details:
@@ -792,19 +756,13 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 4, tokenAccrual: 3, effort: 3 },
     category: "identity",
     launchDate: "TBD",
-    sortDate: "2025-12",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Use a .sui name or subname as the key to private chats, allowlists, event tickets, and members-only content.",
     details:
-      "This is possible today with a custom Discord bot: a member connects Discord, connects a Sui wallet, signs a nonce to prove wallet control, and the bot checks whether that wallet owns or resolves to the required SuiNS name/subname. If the check passes, the bot grants a Discord role through Discord's role API; scheduled rechecks can remove the role if the name expires or moves. Turnkey token-gating tools like Guild and Collab.Land are the precedent, but SuiNS-specific name/subname gates likely need a purpose-built Sui integration.",
+      "The primitive already works: Seal (Sui's on-chain encryption framework) can use SuiNS subname ownership as a decryption condition — only holders of member.community.sui can decrypt the content. A community member has documented this pattern. What does not yet exist is a packaged, no-code product — a SuiNS-native gating UI comparable to Guild.xyz or Collab.Land. That is what this feature tracks.",
     audience: "Communities, event organizers, and gated-content creators.",
     audienceTag: "both",
     openForBuilders: true,
-    links: {
-      reference: "https://docs.suins.io/",
-    },
     whyItMatters:
       "Turns names into keys — every gated group becomes a recurring reason to own a .sui name or subname.",
     demandVector: ["identity"],
@@ -818,8 +776,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 4, tokenAccrual: 4, effort: 2 },
     category: "payments",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Generate a shareable link or QR to be paid at your .sui name — request an exact amount, like a crypto-native invoice.",
     details:
@@ -839,8 +795,6 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 3, tokenAccrual: 3, effort: 3 },
     category: "identity",
     launchDate: "TBD",
-    provenance: "researched",
-    review: "verified",
     howItWorks:
       "Attach verifiable badges and credentials to a .sui name — proof of membership, attendance, KYC, or achievements others can trust.",
     details:

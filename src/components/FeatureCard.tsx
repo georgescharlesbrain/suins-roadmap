@@ -379,11 +379,6 @@ function FeatureModal({
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <StatusBadge status={feature.status} />
-          {feature.review === "candidate" && (
-            <span className="inline-flex items-center rounded-full border border-dashed border-amber-400 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-              Idea — exploring
-            </span>
-          )}
           {feature.openForBuilders && (
             <span className="inline-flex items-center rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
               Looking for builder
@@ -558,11 +553,6 @@ export function FeatureCard({ feature }: { feature: RoadmapFeature }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {feature.review === "candidate" && (
-            <span className="inline-flex items-center rounded-full border border-dashed border-amber-400 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-              Idea — exploring
-            </span>
-          )}
           {feature.openForBuilders && (
             <span className="inline-flex items-center rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
               Looking for builder

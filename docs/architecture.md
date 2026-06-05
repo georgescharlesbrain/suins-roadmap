@@ -35,7 +35,6 @@ resources/suins/website/
 │   │   ├── roadmap.ts             # Authoritative roadmap feature database (typed)
 │   │   └── site.ts                # All text copy, hero, showcase catalog, footer links
 │   └── lib/
-│       └── preview.ts             # usePreview() hook — true in dev or ?preview=1
 ├── .github/
 │   ├── workflows/ci.yml           # TypeScript CI check on every push/PR
 │   └── dependabot.yml             # Automated npm + Actions dependency updates
@@ -122,11 +121,6 @@ export interface RoadmapFeature {
   unlocks?: string[];
   precedent?: string;
   precedentLink?: string;
-  /** Research provenance — official = from SuiNS team, researched = AI-surfaced */
-  provenance?: "official" | "researched";
-  /** Review status — verified = fact-checked, candidate = still needs review */
-  review?: "verified" | "candidate";
-  /** Priority scoring (shown in modal only) */
   score?: FeatureScore;
 }
 ```
@@ -147,9 +141,6 @@ export interface RoadmapFeature {
 - Phase stepper (if `phases` present)
 - Dependency pills (`dependsOn` / `unlocks`) with deep-link navigation
 - Score panel: Impact / Token Accrual / Effort ratings + computed Priority score
-
-### Preview Gate
-`usePreview()` in `src/lib/preview.ts` returns `true` when `NODE_ENV !== "production"` or `?preview=1` is in the URL. `review: "candidate"` features are hidden in production and visible only in preview mode.
 
 ---
 

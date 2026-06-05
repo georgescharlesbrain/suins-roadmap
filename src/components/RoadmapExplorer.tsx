@@ -7,7 +7,6 @@ import {
   type RoadmapStatus,
 } from "@/data/roadmap";
 import { site } from "@/data/site";
-import { usePreview } from "@/lib/preview";
 import { FeatureCard } from "./FeatureCard";
 
 type Filter = "all" | RoadmapStatus;
@@ -27,15 +26,10 @@ function byDate(a: RoadmapFeature, b: RoadmapFeature) {
 
 export function RoadmapExplorer() {
   const [filter, setFilter] = useState<Filter>("all");
-  const preview = usePreview();
 
   const sections = site.sections.filter(
     (s) => filter === "all" || s.status === filter,
   );
-
-  /** Hide review-pending candidates unless preview mode is on. */
-  const isVisible = (f: RoadmapFeature) =>
-    preview || f.review !== "candidate";
 
   return (
     <section id="roadmap" className="mx-auto max-w-6xl px-6 py-16">
@@ -70,7 +64,6 @@ export function RoadmapExplorer() {
         {sections.map((section) => {
           const features = roadmapFeatures
             .filter((f) => f.status === section.status)
-            .filter(isVisible)
             .sort(byDate);
           return (
             <div key={section.status} className="relative pl-6">
