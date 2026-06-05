@@ -1,0 +1,38 @@
+name: Smoke tests
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    # Give Vercel time to finish deploying before hitting the live site
+    steps:
+      - name: Wait for Vercel deployment
+        run: sleep 60
+
+      - name: Check all routes
+        run: |
+          BASE="https://suins-roadmap.vercel.app"
+          FAILED=0
+
+          check() {
+            local path="$1"
+            local label="$2"
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" --max-time 15 "${BASE}${path}")
+            if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 400 ]; then
+              echo "FAIL $label → HTTP $STATUS"
+              FAILED=1
+            else
+              echo "OK   $label → HTTP $STATUS"
+            fi
+          }
+
+          check "/"             "Home"
+          check "/roadmap"      "Roadmap"
+          check "/products"     "Products"
+          check "/contributors" "Contributors"
+
+          exit $FAILED
