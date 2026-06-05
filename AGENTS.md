@@ -51,8 +51,4 @@ Treat it as an independent public repository, not as a normal Nexus wiki page.
 - Dependabot config lives in `.github/dependabot.yml`.
 - Vercel security headers live in `vercel.json`.
 
-## Git Hygiene
-
-- Keep generated folders out of git: `.next`, `node_modules`, `.vercel`,
-  `next-env.d.ts`, and `*.tsbuildinfo`.
 
