@@ -8,6 +8,10 @@ updates:
       time: "09:00"
       timezone: Africa/Nairobi
     open-pull-requests-limit: 5
+    ignore:
+      # Tailwind v4 is a breaking major version — requires full config rewrite
+      - dependency-name: tailwindcss
+        versions: [">=4"]
     groups:
       next-react:
         patterns:
