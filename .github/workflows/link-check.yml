@@ -1,0 +1,31 @@
+name: Link check
+
+on:
+  schedule:
+    # Every Sunday at 08:00 UTC
+    - cron: "0 8 * * 0"
+  workflow_dispatch:
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Scan all source and doc files for URLs
+          args: >
+            --verbose
+            --no-progress
+            --exclude-mail
+            --exclude "localhost"
+            --exclude "127.0.0.1"
+            --exclude "suins-roadmap.vercel.app"
+            'src/**/*.ts'
+            'src/**/*.tsx'
+            'docs/**/*.md'
+          # Report broken links but don't fail the workflow
+          # Change to true once false positives are tuned
+          fail: false

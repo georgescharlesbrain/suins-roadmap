@@ -8,127 +8,158 @@ This document outlines the directory structure, data flow, and tooling conventio
 
 ```
 resources/suins/website/
-├── docs/                      # Specification & design files
-│   ├── AGENTS.md              # Guidelines for AI coding assistants
-│   ├── design.md              # Design system & color tokens
-│   ├── website_plan.md        # Technical build specification
-│   └── feature_research_plan.md # Naming service feature research
+├── docs/                          # Specification & design files
+│   ├── AGENTS.md                  # Rules for AI coding assistants
+│   ├── architecture.md            # This file
+│   ├── design.md                  # Design system & color tokens
+│   └── devops_improvement_plan.md # GitHub/Vercel improvement tracker
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx         # Root HTML layout, Inter font setup, SEO metadata
-│   │   ├── page.tsx           # Composes the page sections (Hero, Thesis, Showcase, Explorer)
-│   │   └── globals.css        # Tailwind directives + utility classes
+│   │   ├── layout.tsx             # Root layout: StatsTicker → SiteNav → page → Footer
+│   │   ├── page.tsx               # Home — Hero + Thesis sections
+│   │   ├── products/page.tsx      # Product Catalog — Showcase component
+│   │   ├── roadmap/page.tsx       # Roadmap — RoadmapExplorer component
+│   │   ├── contributors/page.tsx  # Contributors thank-you page (self-contained)
+│   │   └── globals.css            # Tailwind directives + shared utility classes
 │   ├── components/
-│   │   ├── Hero.tsx           # Page header, navigation, and main CTAs
-│   │   ├── Thesis.tsx         # SuiNS core investment thesis & demand vector cards
-│   │   ├── Showcase.tsx       # "Built on SuiNS" catalog showcase (e.g., Slush, Passki)
-│   │   ├── RoadmapExplorer.tsx # Interactive timeline filter & status grid controller
-│   │   ├── FeatureCard.tsx    # Renders feature details, money pill, and expands modal
-│   │   ├── StatusBadge.tsx    # Status pills (Shipped, Building, Exploring)
-│   │   └── Footer.tsx         # Bottom links and social navigation
-│   └── data/
-│       ├── roadmap.ts         # Authoritative database of roadmap features (typed)
-│       └── site.ts            # Authoritative source of text content, hero copy, & links
-├── tailwind.config.ts         # Color palette extension (sui-blue, navy, sky, aqua)
-├── package.json               # Next.js 14 scripts & package dependencies
-└── pnpm-lock.yaml             # Lockfile for pnpm package manager
+│   │   ├── SiteNav.tsx            # Sticky global nav: Home / Roadmap / Products / Contributors
+│   │   ├── Hero.tsx               # Landing hero: headline, taglines, and CTAs
+│   │   ├── Thesis.tsx             # Investment thesis + demand vector cards
+│   │   ├── Showcase.tsx           # Product Catalog grid ("Built on SuiNS")
+│   │   ├── RoadmapExplorer.tsx    # Filter bar + status-grid controller
+│   │   ├── FeatureCard.tsx        # Feature card + modal overlay with score panel
+│   │   ├── StatusBadge.tsx        # Shipped / Building / Exploring pills
+│   │   ├── StatsTicker.tsx        # Top-of-page metrics ticker bar
+│   │   └── Footer.tsx             # Official links, social, and contribute CTA
+│   ├── data/
+│   │   ├── roadmap.ts             # Authoritative roadmap feature database (typed)
+│   │   └── site.ts                # All text copy, hero, showcase catalog, footer links
+│   └── lib/
+│       └── preview.ts             # usePreview() hook — true in dev or ?preview=1
+├── .github/
+│   ├── workflows/ci.yml           # TypeScript CI check on every push/PR
+│   └── dependabot.yml             # Automated npm + Actions dependency updates
+├── vercel.json                    # Security headers (HSTS, CSP, X-Frame-Options, …)
+├── tailwind.config.ts             # Brand palette: sui-blue, navy, sky, aqua, deep
+├── package.json                   # Next.js 15 scripts; packageManager: pnpm@10.29.3
+└── pnpm-lock.yaml                 # Lockfile
 ```
 
 ---
 
-## 2. Data Flow & Rendering
+## 2. Page Routes
 
-The application is built around **strict separation of content and presentation**:
-*   **Static Data Modules**: All textual content, metadata, links, and roadmap states are defined as typed TS constants in `site.ts` and `roadmap.ts`. No raw copy is hardcoded directly inside JSX components.
-*   **Dynamic UI Components**: React components import these constants and map them into the DOM. For example, `RoadmapExplorer` imports `roadmapFeatures` from `roadmap.ts` and allows users to filter them dynamically by status (Shipped, Building, Exploring) or view detailed modal overlays.
+| Route | Component | Purpose |
+|---|---|---|
+| `/` | `Hero` + `Thesis` | Landing — investment pitch and demand vectors |
+| `/roadmap` | `RoadmapExplorer` | Interactive filter + feature cards |
+| `/products` | `Showcase` | Product catalog — live products built on SuiNS |
+| `/contributors` | Contributors (inline) | Thank-you page for community contributors |
+
+Global chrome (`StatsTicker`, `SiteNav`, `Footer`) is rendered once in `layout.tsx` and wraps every route.
+
+---
+
+## 3. Data Flow & Rendering
+
+The application uses **strict separation of content and presentation**: all copy, metadata, and links live in typed data modules; components are pure renderers.
 
 ```mermaid
 graph TD
-    Data[src/data/site.ts & roadmap.ts] -->|Imports| Components[src/components/*]
-    Components -->|Page layout| AppRoute[src/app/page.tsx]
-    AppRoute -->|Global style wrappers| HTML[src/app/layout.tsx]
+    RoadmapData[src/data/roadmap.ts] -->|roadmapFeatures[]| RoadmapExplorer
+    SiteData[src/data/site.ts] -->|site.*| Hero & Thesis & Showcase & SiteNav & Footer
+    RoadmapExplorer -->|feature props| FeatureCard
+    Layout[src/app/layout.tsx] --> StatsTicker & SiteNav & PageSlot & Footer
+    PageSlot --> Home & RoadmapPage & ProductsPage & ContributorsPage
 ```
 
 ---
 
-## 3. Developer & Environment Rules
+## 4. Feature Data Schema (`RoadmapFeature`)
 
-Refer to [AGENTS.md](../AGENTS.md) for full assistant rules:
-*   **Local Server**: Start only via `pnpm dev` (runs on port 3102).
-*   **Build Restriction**: **Never** run `pnpm build` or `npm run build` during local development to avoid breaking chunk generation in the active dev server.
-*   **Compilation / Lint checks**: Run `npx tsc --noEmit` to check types, and use Next.js's Vercel deployment pipeline to build/test production builds.
-
----
-
-## 4. Feature Card Schema & Structure
-
-Each roadmap feature is represented as a structured data object within `src/data/roadmap.ts` and rendered dynamically using the `FeatureCard` component.
-
-### 4.1 Data Schema (`RoadmapFeature`)
-
-The TypeScript interface in `src/data/roadmap.ts` defines the content and behavior capabilities of a feature card:
+Defined in `src/data/roadmap.ts`:
 
 ```typescript
+export interface FeatureScore {
+  impact: number;       // 1–5: user/ecosystem impact
+  tokenAccrual: number; // 1–5: $NS fee / burn pressure
+  effort: number;       // 1–5: implementation complexity (higher = harder)
+}
+
+export function featurePriority(s: FeatureScore): number {
+  return Math.round((s.impact * s.tokenAccrual) / s.effort * 10) / 10;
+}
+
 export interface RoadmapFeature {
   title: string;
   status: "implemented" | "in-development" | "proposed";
   category: "naming" | "identity" | "payments" | "governance" | "social" | "infrastructure";
-  launchDate: string;                  // Human-readable launch target (e.g. "August 2025")
-  sortDate?: string;                   // YYYY-MM helper for chronological sorting
-  howItWorks: string;                  // Always-visible concise description
-  details?: string;                    // Detailed narrative for the modal view
-  phases?: { title: string; body: string }[]; // Stepper roadmap phases (optional)
-  audience: string;                    // Text describing audience impact
+  launchDate: string;
+  sortDate?: string;
+  howItWorks: string;
+  details?: string;
+  phases?: { title: string; body: string }[];
+  audience: string;
   audienceTag: "end-users" | "investors" | "both";
   monetization?: {
     generatesRevenue: boolean;
-    model?: string;                    // Description of fee model (e.g. "2.5% of each auction")
-    beneficiary?: string;              // Revenue destination (e.g. "DAO treasury")
+    model?: string;
+    beneficiary?: string;
   };
-  builder?: string;                    // Developing entity or team
-  builderLink?: string;                // Link to builder's X/GitHub profile
-  openForBuilders?: boolean;           // Active RFP candidate indicator
-  links?: {                            // Social and reference links
+  builder?: string;
+  builderLink?: string;
+  openForBuilders?: boolean;
+  links?: {
     github?: string;
     blogpost?: string;
     implementation?: string;
     twitter?: string;
     reference?: string;
   };
-  whyItMatters?: string;               // Italicized strategic value statement
-  demandVector?: ("websites" | "agents" | "payments" | "identity")[]; // Flywheel tags
-  dependsOn?: string[];                // Title references to prerequisites
-  unlocks?: string[];                  // Title references to dependent features
-  precedent?: string;                  // Proven comparable (e.g. "ENS DNS Import")
-  precedentLink?: string;              // Link to precedent documentation
+  whyItMatters?: string;
+  demandVector?: ("websites" | "agents" | "payments" | "identity")[];
+  dependsOn?: string[];
+  unlocks?: string[];
+  precedent?: string;
+  precedentLink?: string;
+  /** Research provenance — official = from SuiNS team, researched = AI-surfaced */
+  provenance?: "official" | "researched";
+  /** Review status — verified = fact-checked, candidate = still needs review */
+  review?: "verified" | "candidate";
+  /** Priority scoring (shown in modal only) */
+  score?: FeatureScore;
 }
 ```
 
-### 4.2 UI Structure & Presentation
+---
 
-The card has two presentation states managed in `FeatureCard.tsx`:
+## 5. Feature Card UI
 
-#### Collapsed Card View
-*   **Header**: Category icon, Title, Share button (chain-link icon), and Status Badge (`StatusBadge`).
-*   **Metadata Badges**: Launch Date, Audience Tag, and Demand Vector Badges.
-*   **Content**: Brief description (`howItWorks`), *Why It Matters* italicized line, and *Precedent* comparable link.
-*   **Monetization Box**: Highlighted panel detailing protocol fee generation or tokenomics (if configured).
-*   **Action Footer**: Clean button row with **Build it** (links to Discord RFP intake if open for builders), **Discuss** (links to Twitter/Blog/Discord), and **Track** (links to GitHub issue/repository).
-*   **Expand Button**: Spans the full width to trigger modal view if details, phases, or dependencies are present.
+### Collapsed Card
+- Header: Title + Status Badge
+- Meta badges: Launch Date, Audience Tag, Demand Vector
+- Body: `howItWorks`, *Why It Matters*, Precedent link
+- Monetization box (if configured)
+- Action footer: **Open ↗** (`links.implementation`), Discuss, Track
 
-#### Expanded Modal View
-Rendered via React Portal onto the document body when expanded:
-*   Includes all collapsed details with a fuller narrative (`details` falling back to `howItWorks`).
-*   **Phase Stepper**: Multi-stage progress indicators.
-*   **Dependency Pills**:
-    *   **Requires**: Interactive prerequisite pills showing a checkmark (green/gray) for `implemented` status, or a lock icon (orange) for unfinished features.
-    *   **Enables**: Interactive unlock outcomes.
-    *   *Clicking any pill closes the current modal, updates the URL hash to the targeted feature, scrolls to its card, and triggers a border flash.*
+### Expanded Modal (React Portal)
+- Full `details` narrative
+- Phase stepper (if `phases` present)
+- Dependency pills (`dependsOn` / `unlocks`) with deep-link navigation
+- Score panel: Impact / Token Accrual / Effort ratings + computed Priority score
 
-### 4.3 Deep Linking & Interactive Behaviors
-*   **Hash Generation**: URL-safe slugs are generated programmatically via `getFeatureSlug(title)`.
-*   **Active Router**: A `useEffect` listener in `FeatureCard` monitors `hashchange` and page load. If the window hash matches the card slug, it:
-    1. Smooth-scrolls the card container into view.
-    2. Triggers the CSS `animate-flash` border animation.
-    3. Auto-expands the card by opening its modal overlay.
+### Preview Gate
+`usePreview()` in `src/lib/preview.ts` returns `true` when `NODE_ENV !== "production"` or `?preview=1` is in the URL. `review: "candidate"` features are hidden in production and visible only in preview mode.
 
+---
+
+## 6. Developer & Environment Rules
+
+See [AGENTS.md](../AGENTS.md) for the full assistant ruleset.
+
+- **Dev server**: `pnpm dev` — runs on port 3102.
+- **Type check**: `pnpm run typecheck` (`tsc --noEmit`) — use this locally instead of building.
+- **Production builds**: handled by Vercel CI only. **Never run `pnpm build` while the dev server is live.**
+- **Verify script**: `pnpm run verify` — alias for `pnpm run typecheck`.
+- **CI**: `.github/workflows/ci.yml` runs typecheck on every push and PR.
+- **Deployment**: Vercel; production branch is `main`; PRs generate preview deployments.

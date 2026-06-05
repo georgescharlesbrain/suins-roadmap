@@ -4,20 +4,6 @@ export function Hero() {
   const { hero } = site;
   return (
     <header className="relative overflow-hidden bg-hero-glow">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-        <span className="text-lg font-bold tracking-tight text-navy">
-          {site.name}
-        </span>
-        <div className="flex items-center gap-3">
-          <a href={hero.secondaryCta.href} className="btn-secondary">
-            {hero.secondaryCta.label}
-          </a>
-          <a href={hero.primaryCta.href} className="btn-primary">
-            {hero.primaryCta.label}
-          </a>
-        </div>
-      </nav>
-
       <div className="mx-auto max-w-4xl px-6 pb-24 pt-16 text-center sm:pt-24">
         <span className="inline-flex items-center rounded-full border border-aqua bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-sui-blue">
           The Future of SuiNS

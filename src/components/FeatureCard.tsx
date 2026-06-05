@@ -125,26 +125,64 @@ function DependencyPills({
 
 function ActionFooter({ feature }: { feature: RoadmapFeature }) {
   const hasBuild = feature.openForBuilders;
-  const openHref = feature.links?.implementation;
   const discussHref = feature.links?.twitter || feature.links?.blogpost || "https://discord.com/channels/1014945398084870245/1018932036632858674";
   const trackHref = feature.links?.github || "https://github.com/MystenLabs/suins-contracts";
+  const infoAction = feature.links?.implementation
+    ? {
+        href: feature.links.implementation,
+        label: "Live feature",
+        className:
+          "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200",
+        live: true,
+      }
+    : feature.links?.blogpost
+      ? {
+          href: feature.links.blogpost,
+          label: "Blog post",
+          className:
+            "bg-sky-50 text-sui-blue hover:bg-sky-100 border border-sky-200",
+          live: false,
+        }
+      : feature.links?.reference
+        ? {
+            href: feature.links.reference,
+            label: "Learn more",
+            className:
+              "bg-sky-50 text-sui-blue hover:bg-sky-100 border border-sky-200",
+            live: false,
+          }
+        : feature.precedentLink
+          ? {
+              href: feature.precedentLink,
+              label: "Precedent",
+              className:
+                "bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200",
+              live: false,
+            }
+          : {
+              href: discussHref,
+              label: "Learn more",
+              className:
+                "bg-sky-50 text-sui-blue hover:bg-sky-100 border border-sky-200",
+              live: false,
+            };
 
   return (
     <div className="flex flex-wrap gap-2 pt-3 border-t border-aqua/60 mt-4 w-full">
-      {openHref && (
-        <a
-          href={openHref}
-          target="_blank"
-          rel="noreferrer"
-          className="flex-1 min-w-[90px] text-center inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
-        >
+      <a
+        href={infoAction.href}
+        target="_blank"
+        rel="noreferrer"
+        className={`flex-1 min-w-[90px] text-center inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors ${infoAction.className}`}
+      >
+        {infoAction.live && (
           <span className="relative flex h-2 w-2 mr-0.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          Live feature
-        </a>
-      )}
+        )}
+        {infoAction.label}
+      </a>
       {hasBuild && (
         <a
           href="https://discord.gg/suins"

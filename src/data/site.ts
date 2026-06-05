@@ -82,33 +82,45 @@ export const site = {
   },
   /** Live products that use SuiNS names — the "built on SuiNS" showcase. */
   showcase: {
-    heading: "Built on SuiNS",
+    heading: "Product Catalog",
     subheading:
-      "Names already in the wild — wallets, explorers, websites, and apps that resolve .sui.",
+      "Live products built on SuiNS — wallets, explorers, websites, and apps that resolve .sui.",
     items: [
+      {
+        name: "SuiNS Portal",
+        category: "Naming",
+        body: "Official portal to register, renew, and manage .sui names.",
+        href: "https://suins.io/",
+        x: "https://x.com/SuiNSdapp",
+        github: "https://github.com/MystenLabs/suins-contracts",
+      },
       {
         name: "Slush Wallet",
         category: "Wallet",
         body: "Send and receive to .sui names instead of long addresses — the default Sui wallet, built by Mysten.",
         href: "https://slush.app/",
+        x: "https://x.com/SlushWallet",
       },
       {
         name: "Suiscan",
         category: "Explorer",
         body: "Block explorer that resolves @names to accounts, activity, and assets.",
         href: "https://suiscan.xyz/",
+        x: "https://x.com/suiscanofficial",
       },
       {
         name: "WAL-0",
         category: "Websites",
         body: "Build, edit, and deploy decentralized sites on Walrus with AI assistance.",
         href: "https://wal-0.commandoss.com/",
+        x: "https://x.com/0xCommandOSS",
       },
       {
         name: "SuiMail",
         category: "Messaging",
         body: "Email-style messaging addressed to your .sui name.",
         href: "https://sui-mail.vercel.app/",
+        x: "https://x.com/SUIMAIL_",
       },
       {
         name: "SuiSign",
@@ -119,14 +131,51 @@ export const site = {
       {
         name: "Passki",
         category: "Identity",
-        body: "Sui Key-In. Manage native Bitcoin, Solana, and Ethereum addresses from a single Sui account, featuring keyless IKA-native agents.",
+        body: "More advanced Sui gateway for SuiNS name resolution, profiles, shareable links, and cross-chain identity tooling.",
         href: "https://sui.ski/",
+        github: "https://github.com/arbuthnot-eth/.SKI",
+      },
+      {
+        name: "official.sui.ski",
+        category: "Identity",
+        body: "Public official.sui profile on sui.ski, showing how a SuiNS name can resolve into a richer profile surface.",
+        href: "https://official.sui.ski/",
+        github: "https://github.com/arbuthnot-eth/.SKI",
+      },
+      {
+        name: "Suiet",
+        category: "Wallet",
+        body: "Community Sui wallet that shows and sends to .sui names instead of long addresses.",
+        href: "https://suiet.app/",
+        x: "https://x.com/suiet_wallet",
+        github: "https://github.com/suiet",
+      },
+      {
+        name: "SuiVision",
+        category: "Explorer",
+        body: "Sui explorer with full SuiNS support across mainnet, testnet, and devnet.",
+        href: "https://suivision.xyz/",
+      },
+      {
+        name: "TradePort",
+        category: "Marketplace",
+        body: "Leading Sui NFT marketplace — buy and sell .sui names on the secondary market.",
+        href: "https://www.tradeport.xyz/sui/collection/suins?bottomTab=trades&tab=items",
+        x: "https://x.com/tradeportxyz",
+      },
+      {
+        name: "BlueMove",
+        category: "Marketplace",
+        body: "NFT marketplace and launchpad where SuiNS names are actively traded.",
+        href: "https://sui.bluemove.net/collection/suins",
+        x: "https://x.com/BlueMove_OA",
       },
       {
         name: "$NS Staking & Governance",
         category: "Governance",
         body: "Stake $NS and vote on proposals at the official SuiNS token portal.",
         href: "https://token.suins.io/",
+        github: "https://github.com/MystenLabs/suins-contracts",
       },
     ],
   },
@@ -140,14 +189,30 @@ export const site = {
     official: [
       { label: "Buy $NS (7k)", href: "https://7k.ag/swap" },
       { label: "SuiNS Portal", href: "https://suins.io/" },
-      { label: "Registration Dashboard", href: "https://suins.io/dashboard" },
       { label: "Technical Docs", href: "https://docs.suins.io/" },
+      {
+        label: "Suiscan Packages & Analytics",
+        href: "https://suiscan.xyz/mainnet/directory/Sui%20Name%20Service",
+      },
+      { label: "$NS on CoinGecko", href: "https://www.coingecko.com/en/coins/suins-token" },
     ],
     social: [
       { label: "Twitter / X", href: "https://x.com/SuiNSdapp" },
       { label: "Discord", href: "https://discord.gg/suins" },
       { label: "GitHub", href: "https://github.com/MystenLabs/suins-contracts" },
+      {
+        label: "Adeniyi's SuiNS Blog Post",
+        href: "https://adeniyisui.substack.com/p/suins-heres-all-the-alpha-you-need",
+      },
     ],
+    contribute: {
+      label: "Contribute on GitHub",
+      href: "https://github.com/georgescharlesbrain/suins-roadmap",
+    },
+    profile: {
+      label: "George C. Brain on X",
+      href: "https://twitter.com/georges_c_brain",
+    },
     note: "Maintained with ❤️ by the SuiNS Community.",
   },
 } as const;

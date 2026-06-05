@@ -119,20 +119,23 @@ export const roadmapFeatures: RoadmapFeature[] = [
     launchDate: "August 2025",
     sortDate: "2025-08",
     howItWorks:
-      "80% of all protocol fees automatically buy $NS on the open market and burn it, permanently reducing supply.",
+      "Protocol fees periodically buy $NS; 80% of the purchased tokens are burned and 20% flows to the DAO treasury.",
     details:
-      "Protocol fees from domain registrations and renewals are used to purchase $NS from the open market. The purchased tokens are sent to the 0x0 Sui system burn address (which is steadily rising in the $NS holder ranks as tokens are burnt) and permanently removed from circulation — a continuous, on-chain deflationary mechanism that ties protocol usage directly to token scarcity.",
+      "Fees from name registrations and renewals paid in SUI or USDC are periodically aggregated and used to market-buy $NS. From those purchased tokens, 80% is burned and 20% is retained by the DAO treasury; when users pay directly in $NS, the same 80/20 burn-and-treasury split applies. Burned tokens are sent to the 0x0 Sui system account and permanently removed from circulation, tying protocol usage directly to token scarcity while still funding ecosystem initiatives.",
     audience: "NS investors looking for value accrual through a deflationary mechanism.",
     audienceTag: "investors",
     monetization: {
       generatesRevenue: false,
-      model: "Spends 80% of protocol fees to buy & burn $NS",
-      beneficiary: "NS holders (value accrual)",
+      model: "80% of protocol-fee value burns $NS; 20% goes to treasury",
+      beneficiary: "NS holders + DAO treasury",
     },
-    builder: "SuiNS DAO / SuiNS Team",
+    builder: "juzybits / SuiNS DAO",
+    builderLink: "https://x.com/juzybits",
     links: {
+      github: "https://github.com/MystenLabs/suins-contracts/pull/332",
       implementation:
         "https://suiscan.xyz/mainnet/coin/0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS/holders",
+      reference: "https://polymedia.app/",
     },
     whyItMatters: "Direct value accrual for NS holders via continuous open-market buybacks.",
     demandVector: ["identity"],
@@ -142,17 +145,17 @@ export const roadmapFeatures: RoadmapFeature[] = [
     status: "implemented",
     score: { impact: 3, tokenAccrual: 4, effort: 3 },
     category: "governance",
-    launchDate: "August 2025",
-    sortDate: "2025-08",
+    launchDate: "November 2024",
+    sortDate: "2024-11",
     howItWorks:
       "Full on-chain, token-weighted DAO governance with staking rewards for active voters.",
     details:
-      "Staking grants a 10% voting-power boost for every month tokens remain staked; tokens lock during the proposals they vote on. Active voters earn rewards drawn from 5% of the community treasury, aligning long-term holders with governance participation.",
+      "The NS token launched in November 2024 as SuiNS' governance layer. Each NS token used in voting counts as one vote, and token locking increases voting power so long-term holders can amplify their governance weight. Active voters earn rewards from the 5% total NS supply allocation reserved for governance voting rewards, aligning long-term holders with proposal participation.",
     audience: "NS investors actively participating in DAO governance.",
     audienceTag: "investors",
     monetization: {
       generatesRevenue: false,
-      model: "Distributes 5% of community treasury as voter rewards",
+      model: "Distributes the 5% governance-reward allocation to voters",
       beneficiary: "Active DAO voters",
     },
     builder: "SuiNS Team",
@@ -170,12 +173,12 @@ export const roadmapFeatures: RoadmapFeature[] = [
     status: "implemented",
     score: { impact: 5, tokenAccrual: 4, effort: 4 },
     category: "social",
-    launchDate: "January 2026",
-    sortDate: "2026-01",
+    launchDate: "April 2026",
+    sortDate: "2026-04",
     howItWorks:
-      "Subnames (e.g. user@community.sui) that turn names into a social discovery layer for networking between holders.",
+      "Claiming a community subname turns a holder into an on-chain community member, adding social and holdings signal to the community graph.",
     details:
-      "Community owners can issue subnames under their name, creating a namespace for their members and a social graph for discovery and networking. Revenue from subname sales is split between the community and the protocol.",
+      "Anyone with a SuiNS name can create a community and issue subnames under that name. Claiming a subname makes a user part of the community on-chain, contributing to real-time holdings, demographics, and social signal for discovery across Sui. Revenue from paid community memberships is split between the community owner and SuiNS.",
     audience: "End users networking through social connect, and DAO communities.",
     audienceTag: "both",
     monetization: {
@@ -206,7 +209,34 @@ export const roadmapFeatures: RoadmapFeature[] = [
     audience: "End users holding .sui names.",
     audienceTag: "end-users",
     builder: "SuiNS Community",
-    links: { implementation: "https://pawtato.app/" },
+    links: { implementation: "https://pawtato.app/board/notifications" },
+  },
+  {
+    title: "Free Stablecoin Transfers on Sui",
+    status: "implemented",
+    score: { impact: 5, tokenAccrual: 3, effort: 1 },
+    category: "payments",
+    launchDate: "May 2026",
+    sortDate: "2026-05",
+    howItWorks:
+      "Supported stablecoins can move peer-to-peer on Sui with $0.00 transfer fees and no separate SUI gas balance.",
+    details:
+      "Sui launched protocol-level gasless stablecoin transfers on mainnet, allowing users and businesses to send supported stablecoins without holding SUI for gas. For SuiNS, this strengthens the payments demand loop: when stablecoin transfers become free and easy, human-readable .sui payment handles become more valuable.",
+    audience: "End users, payment apps, enterprises, and AI agents using stablecoins on Sui.",
+    audienceTag: "both",
+    monetization: {
+      generatesRevenue: false,
+      model: "Network-level payment rail that drives demand for readable payment handles",
+      beneficiary: "Sui users and SuiNS name holders",
+    },
+    builder: "Sui Foundation / Mysten Labs",
+    links: {
+      implementation: "https://www.sui.io/payments",
+      blogpost: "https://blog.sui.io/sui-launches-gasless-stablecoin-transfers/",
+      reference: "https://www.sui.io/payments",
+    },
+    whyItMatters: "Free stablecoin transfers make .sui names more useful as everyday payment handles.",
+    demandVector: ["payments", "agents"],
   },
 
   // ----------------------------------------------------------- Under development
@@ -215,18 +245,17 @@ export const roadmapFeatures: RoadmapFeature[] = [
     status: "in-development",
     score: { impact: 5, tokenAccrual: 4, effort: 3 },
     category: "identity",
-    launchDate: "September 2026",
-    sortDate: "2026-09",
+    launchDate: "August 2026",
+    sortDate: "2026-08",
     howItWorks:
       "Linktree-style on-chain identity: attach social links, crosschain wallets, and custom avatars to a name.",
     details:
-      "Names become extensible identity objects carrying metadata — socials, crosschain wallet addresses, avatars — functioning like a Linktree for on-chain identity. The system is extensible for apps (e.g. KYC) and supports generating profile pages published to walrus.site.",
+      "Names become extensible identity objects carrying metadata: profile information, social links, crosschain wallet addresses, avatars, and app-added key/value pairs such as KYC attestations. The RFP scope includes protocol, contract, SDK, RPC, NFT, frontend, and documentation updates, plus dynamic Walrus Site generation modules for profile pages.",
     audience: "End users seeking verifiable and extensible identity.",
     audienceTag: "end-users",
     builder: "Lead Partner: Nexa (product design by Mysten)",
     builderLink: "https://x.com/nexaxyz",
     links: {
-      implementation: "https://suiscan.xyz/mainnet/account/@shaan/activity",
       reference:
         "https://notion.sui.io/SuiNS-RFP-Program-19637af41c6e80b69a3df24132b48458",
     },
@@ -238,12 +267,12 @@ export const roadmapFeatures: RoadmapFeature[] = [
     status: "in-development",
     score: { impact: 3, tokenAccrual: 4, effort: 3 },
     category: "payments",
-    launchDate: "August 2026",
-    sortDate: "2026-08",
+    launchDate: "September 2026",
+    sortDate: "2026-09",
     howItWorks:
       "Christie's-style, time-based auctions for domains — bid, set reserves, get offer notifications, and watch names.",
     details:
-      "A native marketplace for premium names with time-based auctions: users can place bids, set reserve pricing, receive offer notifications, and add names to a watchlist. A protocol fee is taken on every settled auction.",
+      "A native marketplace for premium names with time-based auctions. Users can list names for a defined period, set reserve pricing, bid on names even when they are not currently listed, explore categories, review complete name history, receive offer notifications, and watch names so they are alerted when a watched name enters auction. A protocol fee is taken on every settled auction.",
     audience: "NS investors trading premium .sui names.",
     audienceTag: "investors",
     monetization: {
@@ -268,7 +297,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
     howItWorks:
       "Secure, immutable wallet-to-wallet messaging with anonymous first contacts — and a targeted-ads platform.",
     details:
-      "Wallet-to-wallet messaging that allows anonymous first contacts. Users can send free messages to their followers, or use $NS tokens for fees and spam prevention (recipients can filter messages by fee value). The same rails double as a platform for projects to run targeted ads to relevant users.",
+      "Wallet-to-wallet messaging that allows anonymous first contacts. Users can send free messages to wallets that follow them, or pay a fee in $NS to contact any wallet. Recipients can filter or ignore messages below a chosen $NS value, see received messages, reply through a Web UI, and receive new-message alerts in wallets and apps. The same rails double as infrastructure for incentivized, targeted ads to relevant users.",
     audience: "End users seeking wallet-to-wallet communication & Web3-native advertisers.",
     audienceTag: "both",
     monetization: {
@@ -284,8 +313,55 @@ export const roadmapFeatures: RoadmapFeature[] = [
     },
     whyItMatters: "Utilizes $NS token as a messaging spam barrier and unlocks ad monetization.",
     demandVector: ["agents", "identity"],
+    dependsOn: ["Rich Profiles", "Contact-Based Friend Discovery"],
     precedent: "XMTP Wallet Messaging",
     precedentLink: "https://xmtp.org/",
+  },
+  {
+    title: "SubnameCap Delegation",
+    status: "in-development",
+    score: { impact: 4, tokenAccrual: 3, effort: 3 },
+    category: "infrastructure",
+    launchDate: "TBD",
+    sortDate: "2026-02",
+    howItWorks:
+      "Let a parent .sui name owner delegate controlled subname-creation rights without transferring the parent name NFT.",
+    details:
+      "The proposed SubnameCap capability would let a holder create a transferable permission object for a specific parent domain. The cap can allow leaf or node subname creation, set usage limits, duration limits, and expiration, and can be revoked by the parent name holder. It is designed to stay valid across normal domain transfers but automatically fail if the parent name expires and is re-registered with a new NFT ID.",
+    audience: "Community owners, marketplaces, organizations, and builders managing subname programs.",
+    audienceTag: "both",
+    builder: "SuiNS contributors",
+    links: {
+      github: "https://github.com/MystenLabs/suins-contracts/issues/363",
+      reference: "https://github.com/MystenLabs/suins-contracts/issues/363",
+    },
+    whyItMatters: "Delegated subname creation makes communities and marketplaces practical without handing over the parent name.",
+    demandVector: ["identity"],
+    dependsOn: ["Communities & Social Layer"],
+  },
+  {
+    title: "1-2 Character Subnames",
+    status: "in-development",
+    score: { impact: 3, tokenAccrual: 3, effort: 1 },
+    category: "naming",
+    launchDate: "TBD",
+    sortDate: "2026-02",
+    howItWorks:
+      "Allow short subnames like a.example.sui and zk.example.sui under parent domains.",
+    details:
+      "SuiNS currently enforces a 3-character minimum for subname labels through the subdomain config, even though short subnames live inside an already-owned parent namespace. The proposed change lowers the default minimum subname label length from 3 to 1, aligning subname policy more closely with ENS-style subdomain behavior while preserving the separate scarcity policy for top-level registrations.",
+    audience: "Community owners and end users who want compact handles under a parent name.",
+    audienceTag: "both",
+    builder: "SuiNS contributors",
+    links: {
+      github: "https://github.com/MystenLabs/suins-contracts/issues/366",
+      reference: "https://github.com/MystenLabs/suins-contracts/issues/366",
+    },
+    whyItMatters: "Short subnames make community handles more desirable, memorable, and useful for identity.",
+    demandVector: ["identity"],
+    dependsOn: ["Communities & Social Layer"],
+    precedent: "ENS subnames do not require the .eth registrar's 3-character minimum",
+    precedentLink: "https://docs.ens.domains/wrapper/usecases/",
   },
   {
     title: "ICANN Sui Application",
@@ -324,19 +400,45 @@ export const roadmapFeatures: RoadmapFeature[] = [
     unlocks: ["DNS Name Import (DNSSEC Bridge)"],
   },
   {
-    title: "Network Convergence",
+    title: "Sui S2 Stack",
     status: "in-development",
     score: { impact: 3, tokenAccrual: 2, effort: 4 },
     category: "infrastructure",
     launchDate: "2026",
     sortDate: "2026-06",
     howItWorks:
-      "Alignment with the unified Sui developer platform (Sui S2), plus potential native private transfers using names.",
+      "Sui's evolution from a standalone L1 into a full-stack app platform, with SuiNS as the native naming and identity layer.",
     details:
-      "Sui S2 Convergence: alignment with the unified Sui developer platform. Private Transactions: potential integration of native private transfers using names as identifiers.",
+      "The Sui S2 Stack is the broader move toward a coherent full-stack developer platform rather than a collection of disconnected primitives. Sui's official stack narrative brings storage, execution, identity, privacy, liquidity, messaging, and agent workflows into one composable system. SuiNS fits into that stack as the human-readable identity, naming, and discovery layer for apps, wallets, agents, and payments.",
     audience: "Developers and end users across the Sui platform.",
     audienceTag: "both",
     builder: "SuiNS Team",
+    links: {
+      blogpost: "https://blog.sui.io/from-apps-to-composable-systems/",
+      reference: "https://docs.sui.io/",
+    },
+    whyItMatters: "If Sui becomes a full-stack app platform, SuiNS becomes the default identity surface across that platform.",
+    demandVector: ["identity", "payments", "agents", "websites"],
+  },
+  {
+    title: "Private Stablecoin Transfers",
+    status: "in-development",
+    score: { impact: 5, tokenAccrual: 3, effort: 4 },
+    category: "payments",
+    launchDate: "Coming soon",
+    howItWorks:
+      "Make stablecoin transfers private by default while keeping transactions auditable for authorized parties.",
+    details:
+      "Sui's payments roadmap includes private stablecoin transfers where transfer amounts are not exposed publicly, while approved parties such as issuers or regulators can retain visibility where required. For SuiNS, private payments make .sui handles more viable for real consumer, enterprise, and institutional payment flows.",
+    audience: "End users, enterprises, stablecoin issuers, and payment apps.",
+    audienceTag: "both",
+    builder: "Sui Foundation / Mysten Labs",
+    links: {
+      reference: "https://www.sui.io/payments",
+    },
+    whyItMatters: "Privacy removes a major blocker for using named stablecoin payments in real commerce.",
+    demandVector: ["payments"],
+    dependsOn: ["Free Stablecoin Transfers on Sui"],
   },
 
   // ------------------------------------------------------------------- Proposals
@@ -371,6 +473,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
     audience: "NS investors wanting to passively participate in governance through trusted proxies.",
     audienceTag: "investors",
     builder: "TBD",
+    dependsOn: ["$NS Token & Staking for Voting"],
   },
   {
     title: "Temporary Premium Auction",
@@ -378,6 +481,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
     score: { impact: 3, tokenAccrual: 3, effort: 2 },
     category: "payments",
     launchDate: "TBD",
+    sortDate: "2026-01",
     howItWorks:
       "Temporary premium pricing on expired names to stop bots sniping value — capturing it for the DAO instead.",
     details:
@@ -390,6 +494,9 @@ export const roadmapFeatures: RoadmapFeature[] = [
       beneficiary: "DAO treasury",
     },
     builder: "TBD",
+    dependsOn: ["Native Auction Service"],
+    precedent: "ENS temporary premium on expired names",
+    precedentLink: "https://support.ens.domains/en/articles/7900438-premium",
   },
   {
     title: "SuiPlay0x1 Integration (Gaming Identity)",
@@ -655,6 +762,97 @@ export const roadmapFeatures: RoadmapFeature[] = [
     demandVector: ["identity"],
     precedent: "SNS perpetual ownership (pay once, no renewals)",
     precedentLink: "https://docs.sns.id/",
+  },
+
+  // ---- Phase 3 additions (other naming services & use cases), 2026-06-05 ----
+  {
+    title: "Onchain Follow Graph",
+    status: "proposed",
+    score: { impact: 3, tokenAccrual: 3, effort: 3 },
+    category: "social",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Follow, and be followed by, other .sui names — a portable social graph every app can read, not locked inside one platform.",
+    details:
+      "Ethereum built this as the Ethereum Follow Protocol (EFP): your follows, blocks, and mutes live on-chain, tied to your name, and work everywhere they're integrated. A .sui follow graph turns names into a portable social network — your connections travel with you across every Sui app, and your .sui name is the profile they point to.",
+    audience: "End users building a social presence; social-app developers.",
+    audienceTag: "both",
+    whyItMatters:
+      "A portable follow graph makes a .sui name the social account of Sui — the more apps read it, the stickier the name.",
+    demandVector: ["identity"],
+    dependsOn: ["Rich Profiles"],
+    precedent: "Ethereum Follow Protocol (EFP) — onchain social graph on ENS",
+    precedentLink: "https://efp.app/",
+  },
+  {
+    title: "Name-Gated Access",
+    status: "proposed",
+    score: { impact: 4, tokenAccrual: 3, effort: 3 },
+    category: "identity",
+    launchDate: "TBD",
+    sortDate: "2025-12",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Use a .sui name or subname as the key to private chats, allowlists, event tickets, and members-only content.",
+    details:
+      "This is possible today with a custom Discord bot: a member connects Discord, connects a Sui wallet, signs a nonce to prove wallet control, and the bot checks whether that wallet owns or resolves to the required SuiNS name/subname. If the check passes, the bot grants a Discord role through Discord's role API; scheduled rechecks can remove the role if the name expires or moves. Turnkey token-gating tools like Guild and Collab.Land are the precedent, but SuiNS-specific name/subname gates likely need a purpose-built Sui integration.",
+    audience: "Communities, event organizers, and gated-content creators.",
+    audienceTag: "both",
+    openForBuilders: true,
+    links: {
+      reference: "https://docs.suins.io/",
+    },
+    whyItMatters:
+      "Turns names into keys — every gated group becomes a recurring reason to own a .sui name or subname.",
+    demandVector: ["identity"],
+    dependsOn: ["Communities & Social Layer"],
+    precedent: "Guild.xyz and Collab.Land token-gated Discord roles",
+    precedentLink: "https://docs.guild.xyz/guild/main-use-cases",
+  },
+  {
+    title: "Payment Requests & Pay Links",
+    status: "proposed",
+    score: { impact: 4, tokenAccrual: 4, effort: 2 },
+    category: "payments",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Generate a shareable link or QR to be paid at your .sui name — request an exact amount, like a crypto-native invoice.",
+    details:
+      "ENS names are already a payment gateway: PayPal and Venmo let users send crypto to a yourname.eth handle. A .sui equivalent — shareable pay links and QR codes that request a specific amount to your name — makes getting paid as easy as sending a link. Every invoice or tip jar is a reason to own a name, and each payment flows on Sui's free rail.",
+    audience: "Creators, merchants, and anyone who gets paid in crypto.",
+    audienceTag: "both",
+    whyItMatters:
+      "Lowers getting paid to a single link — turning the payments thesis into an everyday product.",
+    demandVector: ["payments"],
+    precedent: "ENS payments on PayPal & Venmo",
+    precedentLink:
+      "https://decrypt.co/248739/paypal-and-venmo-users-can-now-send-crypto-payment-with-ens-names",
+  },
+  {
+    title: "Onchain Credentials & Badges",
+    status: "proposed",
+    score: { impact: 3, tokenAccrual: 3, effort: 3 },
+    category: "identity",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Attach verifiable badges and credentials to a .sui name — proof of membership, attendance, KYC, or achievements others can trust.",
+    details:
+      "Unstoppable Domains pins badges to a name; Ethereum uses attestations (EAS) to make claims verifiable. A .sui name can carry third-party-issued, verifiable credentials — event attendance (POAP-style), DAO membership, KYC status, on-chain achievements — that any app can check. The name becomes a trusted reputation layer, not just an address.",
+    audience: "End users building reputation; apps needing verifiable claims.",
+    audienceTag: "both",
+    whyItMatters:
+      "Verifiable credentials make a name worth trusting — reputation that can't be faked raises the cost of leaving it.",
+    demandVector: ["identity"],
+    dependsOn: ["Rich Profiles"],
+    precedent: "Unstoppable Domains badges & Ethereum Attestation Service (EAS)",
+    precedentLink: "https://unstoppabledomains.com/",
   },
 ];
 

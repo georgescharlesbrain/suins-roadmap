@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import { StatsTicker } from "@/components/StatsTicker";
+import { SiteNav } from "@/components/SiteNav";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -20,7 +23,10 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="font-sans">
         <StatsTicker />
+        <SiteNav />
         {children}
+        <Footer />
+        <Analytics />
       </body>
     </html>
   );
