@@ -214,5 +214,6 @@ export const site = {
       href: "https://twitter.com/georges_c_brain",
     },
     note: "Maintained with ❤️ by the SuiNS Community.",
+    lastUpdated: "June 2026",
   },
 } as const;

@@ -91,7 +91,10 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex items-center justify-between gap-4">
-          <p className="text-xs text-white/50">{footer.note}</p>
+          <p className="text-xs text-white/50">
+            {footer.note}
+            <span className="ml-3 text-white/30">Updated {footer.lastUpdated}</span>
+          </p>
           <div className="flex items-center gap-2">
             <a
               href={footer.contribute.href}
