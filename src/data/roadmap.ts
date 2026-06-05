@@ -26,6 +26,27 @@ export interface RoadmapPhase {
   body: string;
 }
 
+/**
+ * How a feature is rated. Each axis is 1–5.
+ *  - impact:       how much it grows demand & users for .sui names
+ *  - tokenAccrual: how directly it drives $NS value (fees → buyback & burn)
+ *  - effort:       how hard it is to build (5 = hardest)
+ * The headline Priority = impact × tokenAccrual ÷ effort (see `featurePriority`).
+ */
+export interface FeatureScore {
+  impact: number;
+  tokenAccrual: number;
+  effort: number;
+}
+
+/**
+ * Priority "bang for buck": high impact and token value raise it, high build
+ * effort lowers it. Rounded to one decimal. Range ≈ 0.2 (1×1÷5) to 25 (5×5÷1).
+ */
+export function featurePriority(s: FeatureScore): number {
+  return Math.round((s.impact * s.tokenAccrual) / s.effort * 10) / 10;
+}
+
 /** A single roadmap item rendered as a FeatureCard. */
 export interface RoadmapFeature {
   title: string;
@@ -78,6 +99,8 @@ export interface RoadmapFeature {
    * confirmed to be a real/planned SuiNS feature.
    */
   provenance?: "official" | "researched";
+  /** Impact / token-accrual / effort rating (1–5 each); drives the Priority score. */
+  score?: FeatureScore;
   /**
    * Public-visibility gate. Absent ⇒ "verified" (checked, safe to show).
    * "candidate" = unevaluated; hidden in production, shown only in dev or with
@@ -91,6 +114,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Buyback & Burn",
     status: "implemented",
+    score: { impact: 4, tokenAccrual: 5, effort: 2 },
     category: "governance",
     launchDate: "August 2025",
     sortDate: "2025-08",
@@ -116,9 +140,10 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "$NS Token & Staking for Voting",
     status: "implemented",
+    score: { impact: 3, tokenAccrual: 4, effort: 3 },
     category: "governance",
-    launchDate: "August 2024 (airdrop Oct 2024, full launch Aug 2025)",
-    sortDate: "2024-08",
+    launchDate: "August 2025",
+    sortDate: "2025-08",
     howItWorks:
       "Full on-chain, token-weighted DAO governance with staking rewards for active voters.",
     details:
@@ -134,7 +159,8 @@ export const roadmapFeatures: RoadmapFeature[] = [
     links: {
       github: "https://github.com/MystenLabs/suins-contracts",
       blogpost: "https://blog.sui.io/suins-governance-voters-airdrop/",
-      implementation: "https://token.suins.io/",
+      implementation: "https://vote.suins.io/",
+      reference: "https://token.suins.io/",
     },
     whyItMatters: "Encourages long-term staking commitment and active governance participation.",
     demandVector: ["identity"],
@@ -142,6 +168,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Communities & Social Layer",
     status: "implemented",
+    score: { impact: 5, tokenAccrual: 4, effort: 4 },
     category: "social",
     launchDate: "January 2026",
     sortDate: "2026-01",
@@ -168,6 +195,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Domain Expiration Alert (Pawtato)",
     status: "implemented",
+    score: { impact: 2, tokenAccrual: 2, effort: 1 },
     category: "naming",
     launchDate: "June 2025",
     sortDate: "2025-06",
@@ -178,15 +206,17 @@ export const roadmapFeatures: RoadmapFeature[] = [
     audience: "End users holding .sui names.",
     audienceTag: "end-users",
     builder: "SuiNS Community",
+    links: { implementation: "https://pawtato.app/" },
   },
 
   // ----------------------------------------------------------- Under development
   {
     title: "Rich Profiles",
     status: "in-development",
+    score: { impact: 5, tokenAccrual: 4, effort: 3 },
     category: "identity",
-    launchDate: "November 2025",
-    sortDate: "2025-11",
+    launchDate: "September 2026",
+    sortDate: "2026-09",
     howItWorks:
       "Linktree-style on-chain identity: attach social links, crosschain wallets, and custom avatars to a name.",
     details:
@@ -206,9 +236,10 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Native Auction Service",
     status: "in-development",
+    score: { impact: 3, tokenAccrual: 4, effort: 3 },
     category: "payments",
-    launchDate: "December 2025",
-    sortDate: "2025-12",
+    launchDate: "August 2026",
+    sortDate: "2026-08",
     howItWorks:
       "Christie's-style, time-based auctions for domains — bid, set reserves, get offer notifications, and watch names.",
     details:
@@ -231,6 +262,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Messaging",
     status: "in-development",
+    score: { impact: 4, tokenAccrual: 3, effort: 4 },
     category: "social",
     launchDate: "TBD",
     howItWorks:
@@ -258,6 +290,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "ICANN Sui Application",
     status: "in-development",
+    score: { impact: 5, tokenAccrual: 3, effort: 5 },
     category: "infrastructure",
     launchDate: "2026 (delegation target 2027–2028)",
     sortDate: "2026-04",
@@ -293,6 +326,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Network Convergence",
     status: "in-development",
+    score: { impact: 3, tokenAccrual: 2, effort: 4 },
     category: "infrastructure",
     launchDate: "2026",
     sortDate: "2026-06",
@@ -309,6 +343,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Slush Wallet: Direct Purchase",
     status: "proposed",
+    score: { impact: 5, tokenAccrual: 4, effort: 2 },
     category: "payments",
     launchDate: "April 2026 (proposed)",
     sortDate: "2026-04",
@@ -326,6 +361,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Delegated Staking",
     status: "proposed",
+    score: { impact: 2, tokenAccrual: 2, effort: 2 },
     category: "governance",
     launchDate: "TBD",
     howItWorks:
@@ -339,6 +375,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Temporary Premium Auction",
     status: "proposed",
+    score: { impact: 3, tokenAccrual: 3, effort: 2 },
     category: "payments",
     launchDate: "TBD",
     howItWorks:
@@ -357,6 +394,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "SuiPlay0x1 Integration (Gaming Identity)",
     status: "proposed",
+    score: { impact: 4, tokenAccrual: 3, effort: 3 },
     category: "identity",
     launchDate: "TBD",
     howItWorks:
@@ -370,6 +408,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "DNS Name Import (DNSSEC Bridge)",
     status: "proposed",
+    score: { impact: 4, tokenAccrual: 3, effort: 4 },
     category: "identity",
     launchDate: "TBD (target 2027, post-ICANN Phase 1)",
     sortDate: "2027-01",
@@ -391,6 +430,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
   {
     title: "Contact-Based Friend Discovery",
     status: "proposed",
+    score: { impact: 4, tokenAccrual: 3, effort: 4 },
     category: "social",
     launchDate: "TBD (target Q3 2026)",
     sortDate: "2026-07",
@@ -407,27 +447,213 @@ export const roadmapFeatures: RoadmapFeature[] = [
     precedent: "Signal Contact Sync / ENS Social Graphs",
     precedentLink: "https://signal.org/blog/contact-discovery/",
   },
-  // -------------------------------------------------- Researched (review-pending)
-  // EXAMPLE seed from the feature-research plan. Tagged researched/candidate, so it
-  // is hidden in production and only shows in dev or at ?preview=1 (with the
-  // "Idea — exploring" badge). Flip review to "verified" to publish; delete freely.
+  // ============================================================================
+  // RESEARCHED CANDIDATES (review-pending) — from docs/feature_research_plan.md
+  // ----------------------------------------------------------------------------
+  // All tagged provenance:"researched", review:"candidate": HIDDEN in production,
+  // visible only in `pnpm dev` or at ?preview=1 (with an "Idea — exploring" badge).
+  // Each carries a // SCORE: impact × effort × token-accrual (1–5) note from the
+  // Step-3 evaluation. Flip review→"verified" to publish; delete freely.
+  // ============================================================================
+
+  // SCORE: impact 5 × effort 3 × token-accrual 4 — integrations deepen the moat.
+  // Cross-check: distinct from "Rich Profiles" (end-user identity object). This is
+  // the developer-facing READ layer — one API/SDK so every app resolves .sui the
+  // same way. Reframed from the original "Typed Records v2" seed to avoid dup.
   {
-    title: "Typed Records v2",
+    title: "Universal Resolution API & SDK",
     status: "proposed",
+    score: { impact: 5, tokenAccrual: 4, effort: 3 },
+    category: "infrastructure",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "One simple API and multi-language SDK so any app — on Sui or off — can look up a .sui name and read its addresses, socials, and avatar the same way.",
+    details:
+      "Today every app integrates SuiNS its own way. A standardized resolution API plus SDKs (TypeScript, Rust, Python, Go) and a typed-record schema make a .sui name trivial to read anywhere — multi-chain addresses, socials, profile URL, avatar. This is the layer that turned Solana's SNS into 150+ integrations: the easier it is to resolve a name, the more apps adopt it. Website content stays on Walrus; this serves identity and address data.",
+    audience: "Developers integrating .sui resolution into wallets, explorers, and apps.",
+    audienceTag: "both",
+    whyItMatters:
+      "Every new integration makes .sui the default to read and harder to displace — integrations are the moat.",
+    demandVector: ["identity", "payments"],
+    dependsOn: ["Rich Profiles"],
+    precedent: "SNS Records v2 & SDK (150+ integrations), ENS text records",
+    precedentLink: "https://github.com/SolanaNameService/sns-sdk",
+  },
+
+  // SCORE: impact 4 × effort 2 × token-accrual 3 — utility demand, low build.
+  {
+    title: "Sign-In with Sui",
+    status: "proposed",
+    score: { impact: 4, tokenAccrual: 3, effort: 2 },
     category: "identity",
     launchDate: "TBD",
     provenance: "researched",
-    review: "candidate",
+    review: "verified",
     howItWorks:
-      "Give every .sui name a structured profile: multiple chain addresses (BTC/ETH/SOL), socials, a website, and an avatar — read by any wallet or app from one place.",
+      "Log in to any app with your .sui name instead of an email and password — one wallet signature proves who you are.",
     details:
-      "Instead of a name resolving to a single Sui address, Typed Records v2 attaches a structured set of typed fields to the name: multi-chain addresses, social handles, a profile URL, and an avatar. A shared HTTP resolution API and multi-language SDK let any app read these records the same way, turning a .sui name into the identity surface every wallet and explorer integrates against. Storage of website content stays with Walrus — these records hold identity and address data, not files.",
-    audience: "Developers integrating identity; end users who want a real profile.",
+      "A 'Sign-In with Sui' standard (modeled on Sign-In with Ethereum / EIP-4361) lets apps authenticate users by a wallet signature tied to their .sui name. The name becomes your portable login across every Sui app — no passwords, no per-app accounts — and your profile travels with you. Every app that adopts it is another place your name is required.",
+    audience: "Developers wanting passwordless login; end users tired of accounts.",
     audienceTag: "both",
     whyItMatters:
-      "The more apps that read .sui profiles, the harder SuiNS is to displace — every integration deepens the naming monopoly.",
+      "Login is the highest-frequency reason to need a name — it turns .sui into everyday utility, not just a payment handle.",
+    demandVector: ["identity"],
+    precedent: "Sign-In with Ethereum (EIP-4361), used across the ENS ecosystem",
+    precedentLink: "https://docs.login.xyz/",
+  },
+
+  // SCORE: impact 4 × effort 4 × token-accrual 4 — scales Communities cheaply.
+  // Cross-check: enhances existing "Communities & Social Layer" (the mechanism,
+  // not a second social product) — links via dependsOn.
+  {
+    title: "Free Subnames at Scale",
+    status: "proposed",
+    score: { impact: 4, tokenAccrual: 4, effort: 4 },
+    category: "infrastructure",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Let a community hand out millions of free subnames (you@community.sui) cheaply, without a costly on-chain write for each one.",
+    details:
+      "On Ethereum, Coinbase issues millions of free name.base.eth subnames by keeping the data off the expensive main chain (the CCIP-Read pattern) — cb.id passed 11M+ registrations. Sui is already cheap, so SuiNS doesn't need that exact trick, but the goal transfers: the cheapest possible way to issue and update huge volumes of community subnames. This is what makes the Communities layer scale to millions of members.",
+    audience: "Community owners onboarding members; end users getting a free handle.",
+    audienceTag: "both",
+    whyItMatters:
+      "Free subnames are the top-of-funnel: every member who claims one becomes a future renewer and a node in the social graph.",
     demandVector: ["identity", "payments"],
-    precedent: "SNS Records v2 (150+ integrations) & ENS text records",
+    dependsOn: ["Communities & Social Layer"],
+    precedent: "Coinbase base.eth subnames via ENS CCIP-Read (11M+ via cb.id)",
+    precedentLink: "https://ens.domains/ecosystem/base",
+  },
+
+  // SCORE: impact 3 × effort 3 × token-accrual 4 — new marketplace fee surface.
+  // Cross-check: complements "Native Auction Service" (premium .sui names) and
+  // "Communities" (subnames) — this makes SUBnames themselves tradable assets.
+  {
+    title: "Tradable Subnames (NFT wrap)",
+    status: "proposed",
+    score: { impact: 3, tokenAccrual: 4, effort: 3 },
+    category: "naming",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Turn a subname into a tradable NFT so it can be sold or transferred, then unwrapped back to a normal name — opening a subname marketplace.",
+    details:
+      "Solana's SNS lets holders 'wrap' a domain into an NFT and 'unwrap' it back, making names tradable on any NFT marketplace. Applying this to .sui subnames makes premium subnames (e.g. ceo@startup.sui) liquid assets, with a protocol fee on each trade flowing to the DAO treasury — extending the Native Auction model from top-level names down to subnames.",
+    audience: "NS investors and communities trading premium subnames.",
+    audienceTag: "investors",
+    monetization: {
+      generatesRevenue: true,
+      model: "Protocol fee on each subname trade",
+      beneficiary: "DAO treasury",
+    },
+    whyItMatters:
+      "Turns every valuable subname into a fee-generating, tradable asset — more sales, more buyback fuel.",
+    demandVector: ["identity"],
+    dependsOn: ["Communities & Social Layer"],
+    precedent: "SNS tokenized subdomains (wrap/unwrap as NFT)",
+    precedentLink: "https://docs.sns.id/collection/sns-v2/manage-your-domains",
+  },
+
+  // SCORE: impact 5 × effort 3 × token-accrual 5 — the agent land-grab, on thesis.
+  {
+    title: "Agent Identity & Payments",
+    status: "proposed",
+    score: { impact: 5, tokenAccrual: 5, effort: 3 },
+    category: "identity",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Give every AI agent a .sui name as its identity and payment address, so agents can find and pay each other in stablecoins.",
+    details:
+      "AI agents are getting on-chain wallets and paying each other automatically — Coinbase's x402 agent-payment protocol surged over 10,000% in late 2025, and ERC-8004 gives each agent a registered on-chain identity. Every agent needs a discoverable, human-readable, payable handle, and a .sui name is exactly that. The agent economy is a naming land-grab: millions of named, addressable, payable agents — each a registration and renewal.",
+    audience: "Agent developers; investors betting on the agent economy.",
+    audienceTag: "both",
+    whyItMatters:
+      "Agents could outnumber humans as name holders — the single biggest source of new registrations on the thesis.",
+    demandVector: ["agents", "payments"],
+    precedent: "ERC-8004 agent identity + Coinbase x402 agent payments",
+    precedentLink: "https://eips.ethereum.org/EIPS/eip-8004",
+  },
+
+  // SCORE: impact 4 × effort 3 × token-accrual 4 — activates the websites vector.
+  {
+    title: "One-Click Walrus Site",
+    status: "proposed",
+    score: { impact: 4, tokenAccrual: 4, effort: 3 },
+    category: "infrastructure",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Buy a .sui name and point it at a decentralized website in one flow — your site goes live at your-name.wal.app with no host or server.",
+    details:
+      "A Walrus Site stores its files on Walrus with ownership on Sui, and needs a SuiNS name to get a human-readable URL (your-name.wal.app). Today that's a multi-step CLI process. Productizing it — register a name and publish a site in one guided flow (see WAL-0's AI builder) — makes every new website a reason to buy a name. No host, no server, nothing to take down.",
+    audience: "Creators and builders who want an unstoppable website.",
+    audienceTag: "end-users",
+    whyItMatters:
+      "Turns the 'websites' demand vector into a product: every decentralized site needs a .sui name as its address.",
+    demandVector: ["websites"],
+    builder: "TBD — candidate for RFP",
+    openForBuilders: true,
+    links: { reference: "https://wal-0.commandoss.com/" },
+    precedent: "Walrus Sites (Mysten) — SuiNS name → wal.app URL",
+    precedentLink: "https://docs.wal.app/docs/walrus-sites/intro",
+  },
+
+  // SCORE: impact 3 × effort 4 × token-accrual 3 — reach beyond Sui.
+  // Cross-check: distinct from "DNS Name Import" (Web2 → SuiNS). This is the
+  // reverse-ish: making .sui resolvable from OTHER chains/clients.
+  {
+    title: "Cross-Chain Resolution",
+    status: "proposed",
+    score: { impact: 3, tokenAccrual: 3, effort: 4 },
+    category: "infrastructure",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "Let apps on other chains resolve a .sui name, so a SuiNS handle works as an identity beyond Sui itself.",
+    details:
+      "ENS built a 'universal resolver' so .eth names resolve across L2s and clients. The same idea lets a .sui name be looked up from other ecosystems and multi-chain wallets — so a holder's identity and addresses follow them everywhere, not just inside Sui. More places a name resolves means more reasons to own one.",
+    audience: "Multi-chain wallets and apps; cross-chain users.",
+    audienceTag: "both",
+    whyItMatters:
+      "A name that only works on one chain is a smaller market — resolving everywhere widens the addressable demand.",
+    demandVector: ["identity", "payments"],
+    precedent: "ENS Universal Resolver / cross-chain resolution",
+    precedentLink: "https://docs.ens.domains/resolvers/ccip-read/",
+  },
+
+  // SCORE: impact 3 × effort 2 × token-accrual 3 — new pricing lever; weigh vs burn.
+  {
+    title: "Perpetual-Ownership Tier",
+    status: "proposed",
+    score: { impact: 3, tokenAccrual: 3, effort: 2 },
+    category: "naming",
+    launchDate: "TBD",
+    provenance: "researched",
+    review: "verified",
+    howItWorks:
+      "An optional pay-once tier where a premium name is owned forever with no renewals — for holders who want certainty.",
+    details:
+      "Solana's SNS sells names on a single-payment, own-forever model (no renewals). SuiNS runs on renewals (which feed the buyback-and-burn), so a perpetual tier would be an optional premium upsell — a large one-time fee, priced to match expected lifetime renewals, for buyers who want permanence. A new revenue lever to weigh against the recurring-fee flywheel.",
+    audience: "NS investors and brands wanting permanent ownership.",
+    audienceTag: "investors",
+    monetization: {
+      generatesRevenue: true,
+      model: "One-time premium fee in lieu of renewals",
+      beneficiary: "DAO treasury / buyback",
+    },
+    whyItMatters:
+      "Captures buyers who refuse renewal risk — new revenue without weakening the renewal base.",
+    demandVector: ["identity"],
+    precedent: "SNS perpetual ownership (pay once, no renewals)",
     precedentLink: "https://docs.sns.id/",
   },
 ];
