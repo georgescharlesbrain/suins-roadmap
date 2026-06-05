@@ -134,7 +134,7 @@ function DependencyPills({
 
 function ActionFooter({ feature }: { feature: RoadmapFeature }) {
   const hasBuild = feature.openForBuilders;
-  const discussHref = feature.links?.twitter || feature.links?.blogpost || "https://discord.gg/suins";
+  const discussHref = feature.links?.twitter || feature.links?.blogpost || "https://discord.com/channels/1014945398084870245/1018932036632858674";
   const trackHref = feature.links?.github || "https://github.com/MystenLabs/suins-contracts";
 
   return (

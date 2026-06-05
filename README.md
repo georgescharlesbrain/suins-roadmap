@@ -29,8 +29,10 @@ npx tsc --noEmit
 ## Links & Resources
 
 - **Live Roadmap Website**: [suins-roadmap.vercel.app](https://suins-roadmap.vercel.app/)
+- **Discord Suggestions Channel**: [SuiNS Suggestions](https://discord.com/channels/1014945398084870245/1018932036632858674) (used to discuss feature proposals, ensuring the right technology stack is selected for each feature implementation)
 - **Official Website**: [SuiNS](https://suins.io/)
 - **SuiNS Twitter / X**: [@SuiNSdapp](https://x.com/SuiNSdapp)
 - **Creator (George Charles Brain) Twitter / X**: [@georges_c_brain](https://x.com/georges_c_brain)
+
 
 
