@@ -29,13 +29,11 @@ Treat it as an independent public repository, not as a normal Nexus wiki page.
 - `src/data/site.ts` is the source for hero, footer, catalog, and static site
   copy.
 - `src/data/roadmap.ts` is the typed source of roadmap features.
-- `docs/` contains project-specific plans and review notes.
+- `docs/architecture.md` and `docs/design.md` contain the project spec and design system.
 
 ## Content Rules
 
 - Keep public roadmap claims source-backed with links when possible.
-- Put unresolved or non-public claims in `docs/review_plan.md`, not in public
-  page copy.
 - For product catalog entries, prefer real product URLs plus public X/GitHub
   links where verified.
 - For contributor entries, use lowercase display names unless the user asks
@@ -47,15 +45,14 @@ Treat it as an independent public repository, not as a normal Nexus wiki page.
 - Vercel project: `suins-roadmap`
 - Production URL: `https://suins-roadmap.vercel.app/`
 - CI lives in `.github/workflows/ci.yml` and runs TypeScript checks.
+- Uptime check lives in `.github/workflows/uptime.yml`.
+- Link checker lives in `.github/workflows/link-check.yml`.
+- Smoke tests live in `.github/workflows/smoke.yml`.
 - Dependabot config lives in `.github/dependabot.yml`.
 - Vercel security headers live in `vercel.json`.
-- DevOps follow-up items live in `docs/devops_improvement_plan.md`.
 
-## Scope Boundaries
+## Git Hygiene
 
-- Do not update root Nexus wiki files (`/Users/koen/nexus/index.md`,
-  `/Users/koen/nexus/log.md`, or the root `README.md`) for ordinary website
-  edits.
 - Keep generated folders out of git: `.next`, `node_modules`, `.vercel`,
   `next-env.d.ts`, and `*.tsbuildinfo`.
 

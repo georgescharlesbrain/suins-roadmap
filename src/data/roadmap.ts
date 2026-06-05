@@ -555,7 +555,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
     precedentLink: "https://signal.org/blog/contact-discovery/",
   },
   // ============================================================================
-  // RESEARCHED CANDIDATES (review-pending) — from docs/feature_research_plan.md
+  // RESEARCHED CANDIDATES (provenance: "researched" — AI-surfaced, pending verification)
   // ----------------------------------------------------------------------------
   // All tagged provenance:"researched", review:"candidate": HIDDEN in production,
   // visible only in `pnpm dev` or at ?preview=1 (with an "Idea — exploring" badge).
