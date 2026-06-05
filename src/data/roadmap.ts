@@ -679,7 +679,7 @@ export const roadmapFeatures: RoadmapFeature[] = [
     demandVector: ["websites"],
     links: {
       implementation: "https://suins.io/",
-      reference: "https://wal-0.commandoss.com/",
+      reference: "https://docs.wal.app/docs/walrus-sites/intro",
     },
   },
 
