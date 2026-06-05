@@ -12,20 +12,6 @@ It features:
 
 This repository is **public** and stands by itself as a Next.js web application.
 
-## Development
-
-To run the development server locally:
-
-```bash
-pnpm dev
-```
-
-To run a compiler type check:
-
-```bash
-npx tsc --noEmit
-```
-
 ## Links & Resources
 
 - **Live Roadmap Website**: [suins-roadmap.vercel.app](https://suins-roadmap.vercel.app/)
