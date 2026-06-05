@@ -25,3 +25,10 @@ To run a compiler type check:
 ```bash
 npx tsc --noEmit
 ```
+
+## Links & Resources
+
+- **Official Website**: [SuiNS](https://suins.io/)
+- **SuiNS Twitter / X**: [@SuiNSdapp](https://x.com/SuiNSdapp)
+- **Creator (George Charles Brain) Twitter / X**: [@georges_c_brain](https://x.com/georges_c_brain)
+
