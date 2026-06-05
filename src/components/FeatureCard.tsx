@@ -4,21 +4,12 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type {
   AudienceTag,
-  RoadmapCategory,
+  FeatureScore,
   RoadmapFeature,
   RoadmapStatus,
 } from "@/data/roadmap";
-import { getFeatureSlug, roadmapFeatures } from "@/data/roadmap";
+import { featurePriority, getFeatureSlug, roadmapFeatures } from "@/data/roadmap";
 import { StatusBadge } from "./StatusBadge";
-
-const CATEGORY: Record<RoadmapCategory, { icon: string; label: string }> = {
-  naming: { icon: "🏷️", label: "Naming" },
-  identity: { icon: "🪪", label: "Identity" },
-  payments: { icon: "💸", label: "Payments" },
-  governance: { icon: "🗳️", label: "Governance" },
-  social: { icon: "💬", label: "Social" },
-  infrastructure: { icon: "🌐", label: "Infrastructure" },
-};
 
 const AUDIENCE: Record<AudienceTag, { label: string; className: string }> = {
   "end-users": { label: "End users", className: "bg-aqua/50 text-sui-blue" },
@@ -134,11 +125,22 @@ function DependencyPills({
 
 function ActionFooter({ feature }: { feature: RoadmapFeature }) {
   const hasBuild = feature.openForBuilders;
+  const openHref = feature.links?.implementation;
   const discussHref = feature.links?.twitter || feature.links?.blogpost || "https://discord.com/channels/1014945398084870245/1018932036632858674";
   const trackHref = feature.links?.github || "https://github.com/MystenLabs/suins-contracts";
 
   return (
     <div className="flex flex-wrap gap-2 pt-3 border-t border-aqua/60 mt-4 w-full">
+      {openHref && (
+        <a
+          href={openHref}
+          target="_blank"
+          rel="noreferrer"
+          className="flex-1 min-w-[90px] text-center inline-flex items-center justify-center gap-1 rounded-xl bg-sui-blue px-3 py-2 text-xs font-bold text-white hover:bg-sui-blue/90 transition-colors"
+        >
+          Open ↗
+        </a>
+      )}
       {hasBuild && (
         <a
           href="https://discord.gg/suins"
@@ -188,6 +190,106 @@ function PhaseStepper({ phases }: { phases: RoadmapFeature["phases"] }) {
   );
 }
 
+/** One 1–5 rating shown as a 5-segment bar. `invert` colors effort (a cost) amber. */
+function Rating({
+  label,
+  value,
+  hint,
+  invert,
+}: {
+  label: string;
+  value: number;
+  hint?: string;
+  invert?: boolean;
+}) {
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[11px] font-semibold text-navy">{label}</span>
+        <span className="text-[10px] text-slate">{value}/5</span>
+      </div>
+      <div className="mt-1 flex gap-0.5">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <span
+            key={n}
+            className={`h-1.5 flex-1 rounded-full ${
+              n <= value
+                ? invert
+                  ? "bg-amber-400"
+                  : "bg-sui-blue"
+                : "bg-navy/10"
+            }`}
+          />
+        ))}
+      </div>
+      {hint && (
+        <p className="mt-0.5 text-[10px] leading-tight text-slate/80">{hint}</p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Score panel: the headline Priority plus the three 1–5 ratings it's built from.
+ * `detailed` (modal) adds the meaning of each number and the full calculation.
+ */
+function ScoreBlock({
+  score,
+  detailed = false,
+}: {
+  score: FeatureScore;
+  detailed?: boolean;
+}) {
+  const priority = featurePriority(score);
+  return (
+    <div className="rounded-xl border border-aqua/60 bg-aqua/15 p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-slate">
+          Priority score
+        </span>
+        <span
+          className="inline-flex items-center rounded-full bg-brand-gradient px-2.5 py-0.5 text-xs font-bold text-white"
+          title="Impact × $NS value ÷ Effort"
+        >
+          {priority}
+        </span>
+      </div>
+      <div className="mt-2 grid grid-cols-3 gap-2">
+        <Rating
+          label="Impact"
+          value={score.impact}
+          hint={detailed ? "Demand & users it drives" : undefined}
+        />
+        <Rating
+          label="$NS value"
+          value={score.tokenAccrual}
+          hint={detailed ? "Drives $NS fees & burn" : undefined}
+        />
+        <Rating
+          label="Effort"
+          value={score.effort}
+          invert
+          hint={detailed ? "Build difficulty (higher = harder)" : undefined}
+        />
+      </div>
+      <p className="mt-2 text-[10px] leading-tight text-slate/80">
+        {detailed ? (
+          <>
+            <span className="font-semibold text-navy">
+              Priority = Impact × $NS value ÷ Effort
+            </span>{" "}
+            = {score.impact} × {score.tokenAccrual} ÷ {score.effort} ={" "}
+            <span className="font-semibold text-navy">{priority}</span>. High
+            impact and token value raise it; high build effort lowers it.
+          </>
+        ) : (
+          "Impact × $NS value ÷ Effort"
+        )}
+      </p>
+    </div>
+  );
+}
+
 function FeatureModal({
   feature,
   onClose,
@@ -204,8 +306,6 @@ function FeatureModal({
       document.body.style.overflow = "";
     };
   }, [onClose]);
-
-  const cat = CATEGORY[feature.category];
 
   return createPortal(
     <div
@@ -352,6 +452,12 @@ function FeatureModal({
           )}
         </dl>
 
+        {feature.score && (
+          <div className="mt-4">
+            <ScoreBlock score={feature.score} detailed />
+          </div>
+        )}
+
         <p className="mt-4 text-[11px] text-slate/80 leading-relaxed bg-navy/5 p-2.5 rounded-xl border border-navy/10">
           Roadmap features are discussed in our Discord suggestion channel. When discussing, please reference the feature tag: <code className="bg-navy/10 px-1 py-0.5 rounded text-navy font-semibold text-[10px]">#{getFeatureSlug(feature.title)}</code>.
         </p>
@@ -366,7 +472,6 @@ function FeatureModal({
 export function FeatureCard({ feature }: { feature: RoadmapFeature }) {
   const [open, setOpen] = useState(false);
   const [flashed, setFlashed] = useState(false);
-  const cat = CATEGORY[feature.category];
   const audience = AUDIENCE[feature.audienceTag];
   const hasMore = Boolean(feature.details || feature.phases || feature.dependsOn?.length || feature.unlocks?.length);
   const money = feature.monetization;
