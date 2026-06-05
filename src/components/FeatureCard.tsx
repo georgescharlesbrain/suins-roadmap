@@ -352,6 +352,10 @@ function FeatureModal({
           )}
         </dl>
 
+        <p className="mt-4 text-[11px] text-slate/80 leading-relaxed bg-navy/5 p-2.5 rounded-xl border border-navy/10">
+          Roadmap features are discussed in our Discord suggestion channel. When discussing, please reference the feature tag: <code className="bg-navy/10 px-1 py-0.5 rounded text-navy font-semibold text-[10px]">#{getFeatureSlug(feature.title)}</code>.
+        </p>
+
         <ActionFooter feature={feature} />
       </div>
     </div>,
