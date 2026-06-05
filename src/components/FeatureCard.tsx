@@ -136,9 +136,13 @@ function ActionFooter({ feature }: { feature: RoadmapFeature }) {
           href={openHref}
           target="_blank"
           rel="noreferrer"
-          className="flex-1 min-w-[90px] text-center inline-flex items-center justify-center gap-1 rounded-xl bg-sui-blue px-3 py-2 text-xs font-bold text-white hover:bg-sui-blue/90 transition-colors"
+          className="flex-1 min-w-[90px] text-center inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
         >
-          Open ↗
+          <span className="relative flex h-2 w-2 mr-0.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          Live feature
         </a>
       )}
       {hasBuild && (
